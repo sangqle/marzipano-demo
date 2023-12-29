@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 
-function createInfoHotspotElement(hotspot: any) {
+function createImageHotspotElement(hotspot: any) {
   var wrapper = document.createElement("div");
   wrapper.classList.add("hotspot");
-  wrapper.classList.add("w-[100px]");
-  wrapper.classList.add("h-[100px]");
+  wrapper.classList.add("w-[600px]");
+  wrapper.classList.add("h-[600px]");
   var icon = document.createElement("img");
-  icon.src = "/react.png";
-  icon.height = 100;
-  icon.width = 100;
+  icon.src = "https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-290923-030426.jpg";
+  icon.height = 600;
+  icon.width = 600;
   wrapper.appendChild(icon);
   return wrapper;
 }
@@ -31,10 +31,10 @@ function Pano({ data }: any) {
         const panoScenes = scenes.map((data: any) => {
           const { id, initialViewParameters, levels, faceSize } = data;
 
-          const urlPrefix = "//www.marzipano.net/media";
+          const urlPrefix = "//localhost:3000/tiles";
           const source = marzipano.ImageUrlSource.fromString(
-            `${urlPrefix}/${id}/{z}/{f}/{y}/{x}.jpg`,
-            { cubeMapPreviewUrl: `${urlPrefix}/${id}/preview.jpg` }
+            `${urlPrefix}/${'0-panara-1'}/{z}/{f}/{y}/{x}.jpg`,
+            { cubeMapPreviewUrl: `${urlPrefix}/${id}/panara-1.jpg` }
           );
 
           const limiter = marzipano.RectilinearView.limit.traditional(
@@ -52,19 +52,14 @@ function Pano({ data }: any) {
             pinFirstLevel: true,
           });
 
-          var imgHotspot = document.createElement("img");
-          imgHotspot.src = "/react.png";
-          imgHotspot.classList.add("hotspot");
-
-          var position = { yaw: Math.PI / 4, pitch: Math.PI / 8 };
-          scene.hotspotContainer().createHotspot(imgHotspot, position);
-
           // Create info hotspots.
-          data.infoHotspots.forEach(function (hotspot: any) {
-            var element = createInfoHotspotElement(hotspot);
-            scene.hotspotContainer().createHotspot(element, { yaw: hotspot.yaw, pitch: hotspot.pitch });
+          data.imageHotspots.forEach(function (hotspot: any) {
+            var element = createImageHotspotElement(hotspot);
+            scene.hotspotContainer().createHotspot(element,
+              { yaw: hotspot.yaw, pitch: hotspot.pitch },
+              { perspective: { radius: 1700, extraTransforms: "rotateX(5deg)" } }
+            );
           });
-
 
           return {
             data: data,
