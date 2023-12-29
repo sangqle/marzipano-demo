@@ -2,11 +2,14 @@
 
 import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic'
-import * as Marzipano from 'marzipano';
+
+const Marzipano = dynamic(
+  () => import('marzipano'),
+  { ssr: false }
+);
 
 function Pano({ data }: any) {
   const panoRef = React.useRef(null);
-
   useEffect(() => {
     if (typeof document !== 'undefined') {
       const {
